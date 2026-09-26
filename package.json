@@ -1,0 +1,35 @@
+{
+  "name": "ai-chatbot-engine",
+  "version": "1.0.0",
+  "description": "Reusable, framework-independent TypeScript AI chatbot & lead generation engine powered by Groq and Firebase",
+  "main": "src/core/chatbot.ts",
+  "type": "module",
+  "scripts": {
+    "chat": "tsx src/cli/chat.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "build": "tsc"
+  },
+  "keywords": [
+    "ai",
+    "chatbot",
+    "groq",
+    "lead-generation",
+    "firebase",
+    "firestore",
+    "typescript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "firebase-admin": "^13.1.0",
+    "groq-sdk": "^0.15.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.9",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.7"
+  }
+}
