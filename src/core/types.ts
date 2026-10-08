@@ -74,4 +74,5 @@ export interface LeadRepository {
 
   getLeadBySessionId?(sessionId: string): Promise<LeadRecord | null>;
   getLeadById?(id: string): Promise<LeadRecord | null>;
+  getLeads?(options?: { limit?: number; offset?: number }): Promise<LeadRecord[]>;
 }

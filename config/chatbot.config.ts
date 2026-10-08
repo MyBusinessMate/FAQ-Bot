@@ -30,12 +30,17 @@ export interface FirebaseConfig {
   serviceAccountPath?: string;
 }
 
+export interface SecurityConfig {
+  leadsApiKey?: string;
+}
+
 export interface ChatbotConfig {
   mode: ChatbotMode;
   responseStyle: ResponseStyleConfig;
   lead: LeadConfig;
   llm: LLMConfig;
   firebase: FirebaseConfig;
+  security: SecurityConfig;
   contextFilePath?: string;
 }
 
@@ -68,6 +73,10 @@ export const chatbotConfig: ChatbotConfig = {
       ? process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n")
       : undefined,
     serviceAccountPath: process.env.FIREBASE_SERVICE_ACCOUNT_PATH,
+  },
+
+  security: {
+    leadsApiKey: process.env.LEADS_API_KEY,
   },
 
   contextFilePath: "context/context.md",

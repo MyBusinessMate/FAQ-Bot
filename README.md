@@ -300,6 +300,41 @@ app.post('/api/chat', async (req, res) => {
 
 ---
 
+### Pattern D: Secured Leads API Route (`GET /api/leads`)
+
+To let an external dashboard or client project view generated leads securely without exposing them publicly:
+
+1. Add `LEADS_API_KEY=your_secret_key` to your `.env` file.
+2. In Next.js App Router (`app/api/leads/route.ts`):
+```typescript
+import { handleLeadsWebRequest } from "@/chatbot/src/api/leads";
+
+export async function GET(request: Request) {
+  return handleLeadsWebRequest(request);
+}
+```
+
+3. In Express / Node.js:
+```typescript
+import { handleLeadsNodeHttp } from "./chatbot/src/api/leads.js";
+
+app.get("/api/leads", (req, res) => {
+  return handleLeadsNodeHttp(req, res);
+});
+```
+
+4. Fetching leads from your client dashboard project:
+```typescript
+const res = await fetch("https://your-chatbot-api.com/api/leads?limit=50", {
+  headers: {
+    Authorization: "Bearer your_secret_key", // or "x-api-key": "your_secret_key"
+  },
+});
+const { success, count, lchrome
+eads } = await res.json();
+```
+
+
 ## 5. Frontend React UI Integration
 
 ### Option 1: Reusable React Hook (`useChat`)

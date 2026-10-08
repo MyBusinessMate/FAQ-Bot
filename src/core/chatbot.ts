@@ -8,6 +8,7 @@ import { ContextLoader } from "./context.js";
 import type {
   ChatInput,
   ChatOutput,
+  LeadRecord,
   LeadRepository,
   LLMProvider,
 } from "./types.js";
@@ -44,6 +45,10 @@ export class Chatbot {
       firebase: {
         ...chatbotConfig.firebase,
         ...(options?.config?.firebase || {}),
+      },
+      security: {
+        ...chatbotConfig.security,
+        ...(options?.config?.security || {}),
       },
     };
 
@@ -123,5 +128,22 @@ export class Chatbot {
    */
   getMode(): string {
     return this.config.mode;
+  }
+
+  /**
+   * Access the underlying Lead repository.
+   */
+  getLeadRepository(): LeadRepository {
+    return this.leadRepository;
+  }
+
+  /**
+   * Retrieve stored leads from the repository.
+   */
+  async getLeads(options?: { limit?: number; offset?: number }): Promise<LeadRecord[]> {
+    if (this.leadRepository.getLeads) {
+      return await this.leadRepository.getLeads(options);
+    }
+    return [];
   }
 }

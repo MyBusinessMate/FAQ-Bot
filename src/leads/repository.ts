@@ -93,6 +93,38 @@ export class FirestoreLeadRepository implements LeadRepository {
       updatedAt: (data.updatedAt as string) || new Date().toISOString(),
     };
   }
+
+  async getLeads(options?: { limit?: number; offset?: number }): Promise<LeadRecord[]> {
+    const firestore = getFirestore();
+    const limit = options?.limit ?? 50;
+
+    let query: FirebaseFirestore.Query = firestore.collection(this.collectionName);
+
+    try {
+      query = query.orderBy("createdAt", "desc");
+    } catch {
+      // If ordering isn't available, proceed without explicit ordering
+    }
+
+    if (limit > 0) {
+      query = query.limit(limit);
+    }
+
+    const snapshot = await query.get();
+    return snapshot.docs.map((doc) => {
+      const data = doc.data() as Record<string, unknown>;
+      return {
+        id: doc.id,
+        sessionId: data.sessionId as string | undefined,
+        name: data.name as string | undefined,
+        email: data.email as string | undefined,
+        phone: data.phone as string | undefined,
+        data: (data.data as Record<string, unknown>) || {},
+        createdAt: (data.createdAt as string) || new Date().toISOString(),
+        updatedAt: (data.updatedAt as string) || new Date().toISOString(),
+      };
+    });
+  }
 }
 
 /**
@@ -137,6 +169,18 @@ export class InMemoryLeadRepository implements LeadRepository {
       }
     }
     return null;
+  }
+
+  async getLeads(options?: { limit?: number; offset?: number }): Promise<LeadRecord[]> {
+    const all = Array.from(this.leads.values()).sort((a, b) => {
+      const timeA = new Date(a.createdAt).getTime() || 0;
+      const timeB = new Date(b.createdAt).getTime() || 0;
+      return timeB - timeA;
+    });
+
+    const limit = options?.limit ?? 50;
+    const offset = options?.offset ?? 0;
+    return all.slice(offset, offset + limit);
   }
 
   getAllLeads(): LeadRecord[] {
